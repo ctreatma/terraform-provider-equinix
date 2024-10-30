@@ -45,6 +45,7 @@ func testSweepVirtualCircuits(region string) error {
 					for _, vc := range port.VirtualCircuits {
 						vcId := ""
 						vcName := ""
+						log.Printf("[INFO][SWEEPER_LOG] Looking at circuit: %v", vc)
 						if vc.VlanVirtualCircuit != nil {
 							vcId = vc.VlanVirtualCircuit.GetId()
 							vcName = vc.VlanVirtualCircuit.GetName()
@@ -58,6 +59,8 @@ func testSweepVirtualCircuits(region string) error {
 							if equinix_errors.IgnoreHttpResponseErrors(http.StatusForbidden, http.StatusNotFound)(resp, err) != nil {
 								errs = append(errs, fmt.Errorf("error deleting VirtualCircuit: %s", err))
 							}
+						} else {
+							log.Printf("[INFO][SWEEPER_LOG] Not deleting VirtualCircuit: %s", vcName)
 						}
 					}
 				}
